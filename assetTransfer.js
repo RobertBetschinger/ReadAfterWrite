@@ -88,10 +88,13 @@ class AssetTransfer extends Contract {
                 AppraisedValue: 850,
             };
 
+
+            //Write über Update Asset Funktion hat bisher nicht funktioniert. Teste ich gerade noch aus. Macht ansich jedoch keinen wirjlichen Unterschied oder?
+            //Ergebnis stimmt nicht mit dem aus Video überein.
             ctx.stub.putState("asset6", Buffer.from(JSON.stringify(updatedAsset6)));
             ctx.stub.putState("asset6", Buffer.from(JSON.stringify(updatedAsset66)));
 
-            //Appraised Value werd ist 825.
+            //Appraised Value Wert ist 825.
     }
 
 
