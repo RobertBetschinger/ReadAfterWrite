@@ -64,13 +64,49 @@ class AssetTransfer extends Contract {
             await ctx.stub.putState(asset.ID, Buffer.from(JSON.stringify(asset)));
 
             
-
-            //Write über Update Asset Funktion hat bisher nicht funktioniert. 
-            //this.UpdateAsset(ctx,asset.ID,asset.Color,asset.Size,asset.Owner,25)
-            //this.UpdateAsset(ctx,asset.ID,asset.Color,asset.Size,asset.Owner,50)
+                //Hier exisitiert das Asset dann immer nicht..
+               // await this.updateAppraisedValue(ctx,"asset1",50)
+               // await this.updateAppraisedValue(ctx,"asset1",25)
+            
+           
             console.info(`Asset ${asset.ID} initialized`);
         }
 
+          //Intene Notizen:
+            //1. Option Funktion schreiben die aufgerufen wird.
+            //1.5 Funktiosinhalt einfach zweimal aufrufen
+            //2. Option Assets überschreiben, aber das ist nicht der Sinn von READ after Writees nicht.
+
+
+      //  await setTimeout[Object.getOwnPropertySymbols(setTimeout)[0]](3000)
+      //Findet das Asset nicht, was ich gerade nicht verstehe. Das selbe wie oben selbst nach Timeout
+      //  await this.updateAppraisedValue(ctx,"asset1",50)
+      //  await this.updateAppraisedValue(ctx,"asset1",25)
+
+           
+      
+        
+           //Habe ich das Hier schon getestet. Ja-->Fehler Container exited with 1
+            /*
+            id= 'asset6'
+            amount = 50
+            const assetJSON = await ctx.stub.getState(id);
+            assetJSON.AppraisedValue = assetJSON.AppraisedValue + amount;
+            ctx.stub.putState(id, Buffer.from(Json.stringify(assetJSON)));
+
+            amount = 25
+            const assetJSON = await ctx.stub.getState(id);
+            assetJSON.AppraisedValue = assetJSON.AppraisedValue + amount;
+            ctx.stub.putState(id, Buffer.from(Json.stringify(assetJSON)));
+            */
+           
+         
+
+             // console.info("Update Asset 6")
+       // let info = await this.UpdateAsset(ctx,"asset6","white",15,"Michel",825)
+       // console.log(info)
+
+            /*
         const updatedAsset6 = {
                 ID: "asset6",
                 Color: "white",
@@ -78,8 +114,6 @@ class AssetTransfer extends Contract {
                 Owner: "Michel",
                 AppraisedValue: 825,
             };
-
-
             const updatedAsset66 = {
                 ID: "asset6",
                 color: "white",
@@ -87,16 +121,32 @@ class AssetTransfer extends Contract {
                 Owner:"Michel",
                 AppraisedValue: 850,
             };
-
-
             //Write über Update Asset Funktion hat bisher nicht funktioniert. Teste ich gerade noch aus. Macht ansich jedoch keinen wirjlichen Unterschied oder?
-            //Ergebnis stimmt nicht mit dem aus Video überein.
             ctx.stub.putState("asset6", Buffer.from(JSON.stringify(updatedAsset6)));
             ctx.stub.putState("asset6", Buffer.from(JSON.stringify(updatedAsset66)));
+            //Appraised Value Wert ist nun 825.
+            */
 
-            //Appraised Value Wert ist 825.
     }
 
+    async readAfterWrite(ctx){
+        console.log("starting read after Write")
+        await this.updateAppraisedValue(ctx,"asset1",25)
+        await this.updateAppraisedValue(ctx,"asset1",50)
+        console.log("finished readAfterWrite")
+    }
+
+    //Das wäre die entsprechende Funktion. Testen ob das mit dem aufrufen klappt.
+    async updateAppraisedValue(ctx,id,amount){
+        const exists = await this.AssetExists(ctx, id);
+        console.log(exists)
+        if (!exists) {
+            throw new Error(`The asset ${id} does not exist`);
+        }
+       const assetJSON = await ctx.stub.getState(id);
+       assetJSON.AppraisedValue = assetJSON.AppraisedValue + amount;
+       return ctx.stub.putState(id, Buffer.from(JSON.stringify(assetJSON)));
+    }
 
 
 
